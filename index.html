@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Webtor.io Player</title>
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #000; /* Plano de fundo da página preto */
+            color: #fff; /* Cor do texto branco para contraste */
+        }
+        #container {
+            text-align: center;
+        }
+        #player {
+            width: 80%;
+            height: 80%;
+            max-width: 800px;
+            max-height: 600px;
+            background-color: #000; /* Plano de fundo do player preto */
+            margin-top: 20px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007bff;
+            color: #fff;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <h1>Webtor.io Player</h1>
+        <input type="text" id="magnetLink" placeholder="Cole o magnet link aqui">
+        <button onclick="openPlayer()">Abrir Player</button>
+        <div id="player"></div>
+    </div>
+
+    <!-- Include the Webtor.io script -->
+    <script src="https://cdn.jsdelivr.net/npm/@webtor/embed-sdk-js/dist/index.min.js"></script>
+    <script>
+        function openPlayer() {
+            var magnet = document.getElementById('magnetLink').value;
+            var playerDiv = document.getElementById('player');
+
+            // Clear previous player content
+            playerDiv.innerHTML = '';
+
+            // Initialize the Webtor player
+            window.webtor = window.webtor || [];
+            window.webtor.push({
+                id: 'player',
+                magnet: magnet, // Get the magnet link from the input field
+                on: function(e) {
+                    if (e.name == window.webtor.TORRENT_FETCHED) {
+                        console.log('Torrent fetched!', e.data);
+                    }
+                    if (e.name == window.webtor.TORRENT_ERROR) {
+                        console.log('Torrent error!');
+                    }
+                },
+                poster: 'https://wallpapers.com/images/hd/overlapping-fine-neon-green-matrix-dvfxd08moa4d5hy8.jpg', // Optional poster image
+                title: 'Torrent Player' // Optional title
+            });
+        }
+    </script>
+</body>
+</html>
