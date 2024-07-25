@@ -1,3 +1,13 @@
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('search-input');
+
+    searchInput.addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            searchTorrents();
+        }
+    });
+});
+
 function searchTorrents() {
     const searchInput = document.getElementById('search-input').value.toLowerCase();
     fetch('data.json')
