@@ -19,7 +19,9 @@ function searchTorrents() {
 
                     const torrentLink = document.createElement('a');
                     torrentLink.href = torrent.magnet;
-                    torrentLink.textContent = 'Download';
+                    torrentLink.textContent = 'Play';
+                    torrentLink.target = '_blank'; // Abre em uma nova aba
+                    torrentLink.style.color = '#4285f4';
 
                     torrentDiv.appendChild(torrentTitle);
                     torrentDiv.appendChild(torrentLink);
