@@ -60,8 +60,8 @@
     <!-- Include the Webtor.io script -->
     <script src="https://cdn.jsdelivr.net/npm/@webtor/embed-sdk-js/dist/index.min.js"></script>
     <script>
-        function openPlayer() {
-            var magnet = document.getElementById('magnetLink').value;
+        function openPlayer(magnet) {
+            var magnetLink = magnet || document.getElementById('magnetLink').value;
             var playerDiv = document.getElementById('player');
 
             // Clear previous player content
@@ -71,7 +71,7 @@
             window.webtor = window.webtor || [];
             window.webtor.push({
                 id: 'player',
-                magnet: magnet, // Get the magnet link from the input field
+                magnet: magnetLink, // Get the magnet link from the input field or parameter
                 on: function(e) {
                     if (e.name == window.webtor.TORRENT_FETCHED) {
                         console.log('Torrent fetched!', e.data);
@@ -84,6 +84,21 @@
                 title: 'Torrent Player' // Optional title
             });
         }
+
+        // Function to get query parameters
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return params;
+        }
+
+        window.onload = function() {
+            const params = getQueryParams();
+            if (params.has('hash')) {
+                const hash = params.get('hash');
+                const magnet = `magnet:?xt=urn:btih:${hash}`;
+                openPlayer(magnet);
+            }
+        };
     </script>
 </body>
 </html>
