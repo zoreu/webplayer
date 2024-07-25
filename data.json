@@ -1,0 +1,10 @@
+[
+    {
+        "title": "Exemplo Torrent 1",
+        "magnet": "magnet:?xt=urn:btih:example1"
+    },
+    {
+        "title": "Exemplo Torrent 2",
+        "magnet": "magnet:?xt=urn:btih:example2"
+    }
+]
