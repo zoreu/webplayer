@@ -17,15 +17,16 @@
             var hls = new Hls();
 
             // Modifica a URL da playlist e dos segmentos
-            // hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
-            //     hls.config.loader = function(context, config, callbacks) {
-            //         var url = context.url;
-            //         var newUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+            hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
+                hls.config.loader = function(context, config, callbacks) {
+                    var url = context.url;
+                    var newUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                    console.log(newUrl);
                     
-            //         var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
-            //         loader.load({ url: newUrl }, callbacks.onSuccess, callbacks.onError, callbacks.onTimeout);
-            //     };
-            // });
+                    var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
+                    loader.load({ url: newUrl }, callbacks.onSuccess, callbacks.onError, callbacks.onTimeout);
+                };
+            });
             
             hls.loadSource(finalUrl);
             hls.attachMedia(video);
