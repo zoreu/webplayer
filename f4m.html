@@ -18,13 +18,14 @@
 
             // Personalize o loader para modificar URLs dos segmentos
             hls.config.loader = function(context, config, callbacks) {
-                console.log("Custom loader called for URL:", context.url);
+                console.log("Custom loader called for context:", context);
                 var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
+                
                 loader.load(context, function(response) {
                     console.log("Original response data:", response.data);
 
                     // Reescrever URLs dos segmentos na playlist M3U8
-                    if (context.url.endsWith('.m3u8')) {
+                    if (context.url && context.url.endsWith('.m3u8')) {
                         var modifiedResponse = response.data.replace(/(\/hls\/[^\s]+)/g, function(segmentUrl) {
                             var finalSegmentUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://cdnrede.com:80' + segmentUrl);
                             console.log("Original Segment URL:", segmentUrl);
