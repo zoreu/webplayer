@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Player M3U8 com Proxy</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+<body>
+    <video id="video" controls width="600"></video>
+
+    <script>
+        var m3u8Url = 'http://cdnrede.com:80/live/nettopc013/ad9pzck/297811.m3u8';
+        if (Hls.isSupported()) {
+            var video = document.getElementById('video');
+            var hls = new Hls();
+
+            // Modifica a URL da playlist e dos segmentos
+            hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
+                hls.config.loader = function(context, config, callbacks) {
+                    var url = context.url;
+                    var newUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
+                    
+                    var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
+                    loader.load({ url: newUrl }, callbacks.onSuccess, callbacks.onError, callbacks.onTimeout);
+                };
+            });
+            
+            hls.loadSource(m3u8Url);
+            hls.attachMedia(video);
+            hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                video.play();
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Para navegadores que suportam nativamente HLS (como o Safari)
+            video.src = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(m3u8Url);
+            video.addEventListener('loadedmetadata', function() {
+                video.play();
+            });
+        }
+    </script>
+</body>
+</html>
