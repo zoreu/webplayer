@@ -35,7 +35,7 @@
                 var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
 
                 loader.load(context, function(response) {
-                    var change_seg = 1;                   
+                    var change_seg = 'true';                   
                     // Reescrever URLs dos segmentos na playlist M3U8
                     if (change_seg) {
                         console.log("Dados original: ", response.data);
