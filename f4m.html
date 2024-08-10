@@ -10,41 +10,34 @@
     <video id="video" controls width="600"></video>
 
     <script>
-        var m3u8Url = 'http://cdnrede.com:80/live/nettopc013/ad9pzck/297811.m3u8';
-        var finalUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(m3u8Url);
+        var m3u8Url = 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://cdnrede.com:80/live/nettopc013/ad9pzck/297811.m3u8');
 
         if (Hls.isSupported()) {
             var video = document.getElementById('video');
             var hls = new Hls();
 
-            hls.on(Hls.Events.MANIFEST_PARSED, function(event, data) {
-                hls.config.loader = function(context, config, callbacks) {
-                    var url = context.url;
-                    var newUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(url);
-                    console.log(newUrl);
+            hls.config.loader = function(context, config, callbacks) {
+                var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
+                loader.load(context, function(response) {
+                    // Reescrever URLs dos segmentos na playlist M3U8
+                    if (context.url.endsWith('.m3u8')) {
+                        var modifiedResponse = response.data.replace(/(\/hls\/[^\n]+)/g, function(segmentUrl) {
+                            return 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://cdnrede.com:80' + segmentUrl);
+                        });
+                        callbacks.onSuccess({ data: modifiedResponse });
+                    } else {
+                        callbacks.onSuccess(response);
+                    }
+                }, callbacks.onError, callbacks.onTimeout);
+            };
 
-                    var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
-                    loader.load({ url: newUrl }, function(response) {
-                        // Reescrever URLs dos segmentos na playlist M3U8
-                        if (url.endsWith('.m3u8')) {
-                            var modifiedResponse = response.data.replace(/(\/hls\/[^\n]+)/g, function(segmentUrl) {
-                                return 'https://api.allorigins.win/raw?url=' + encodeURIComponent('http://cdnrede.com:80' + segmentUrl);
-                            });
-                            callbacks.onSuccess({ data: modifiedResponse });
-                        } else {
-                            callbacks.onSuccess(response);
-                        }
-                    }, callbacks.onError, callbacks.onTimeout);
-                };
-            });
-
-            hls.loadSource(finalUrl);
+            hls.loadSource(m3u8Url);
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
                 video.play();
             });
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-            video.src = finalUrl;
+            video.src = m3u8Url;
             video.addEventListener('loadedmetadata', function() {
                 video.play();
             });
