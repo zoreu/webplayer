@@ -21,6 +21,11 @@
                 console.log("Custom loader called for context:", context);
                 
                 // Garantir que a URL é corretamente logada
+                if (context.type) {
+                    console.log("Context Type:", context.type);
+                } else {
+                    console.log("Context Type is undefined");
+                }
                 if (context.url) {
                     console.log("Context URL:", context.url);
                 } else {
