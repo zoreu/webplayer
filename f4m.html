@@ -19,6 +19,14 @@
             // Personalize o loader para modificar URLs dos segmentos
             hls.config.loader = function(context, config, callbacks) {
                 console.log("Custom loader called for context:", context);
+                
+                // Garantir que a URL é corretamente logada
+                if (context.url) {
+                    console.log("Context URL:", context.url);
+                } else {
+                    console.error("Context URL is undefined");
+                }
+
                 var loader = new Hls.DefaultConfig.loader(context, config, callbacks);
                 
                 loader.load(context, function(response) {
