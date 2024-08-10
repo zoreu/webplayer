@@ -11,6 +11,7 @@
 
     <script>
         var m3u8Url = 'http://cdnrede.com:80/live/nettopc013/ad9pzck/297811.m3u8';
+        var finalUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(m3u8Url);
         if (Hls.isSupported()) {
             var video = document.getElementById('video');
             var hls = new Hls();
@@ -26,14 +27,15 @@
                 };
             });
             
-            hls.loadSource(m3u8Url);
+            hls.loadSource(finalUrl);
             hls.attachMedia(video);
             hls.on(Hls.Events.MANIFEST_PARSED, function() {
                 video.play();
             });
         } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
             // Para navegadores que suportam nativamente HLS (como o Safari)
-            video.src = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(m3u8Url);
+            //video.src = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(m3u8Url);
+            video.src = finalUrl;
             video.addEventListener('loadedmetadata', function() {
                 video.play();
             });
